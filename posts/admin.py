@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, Group
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -14,3 +14,4 @@ class PostAdmin(admin.ModelAdmin):
 
 # при регистрации модели Post, источником информации для неё назначен PostAdmin
 admin.site.register(Post, PostAdmin)
+admin.site.register(Group)
