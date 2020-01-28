@@ -24,9 +24,9 @@ urlpatterns = [
     path('', include('posts.urls')),
 
     # регистрация и авторизация
-    path('auth', include('users.urls')),
+    path('auth/', include('users.urls')),
 
     # если нужного шаблона для /auth не нашлось в файле users.urls -
     # ищем совпадения в файле "django.conrib.auth.urls"
-    path('auth', include('users.urls')),
+    path('auth/', include('users.urls')),
 ]
