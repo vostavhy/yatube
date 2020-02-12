@@ -1,2 +1,2 @@
-# yatube
-Social network for blogers
+# hw03_forms
+hw03_forms
