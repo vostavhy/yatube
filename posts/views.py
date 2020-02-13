@@ -31,10 +31,16 @@ def new_post(request):
 
         # проверяем данные на валидность и если данные валидны, создаем новый пост
         if form.is_valid():
-            author = request.user
-            text = form.cleaned_data['text']
-            group = form.cleaned_data['group']
-            Post.objects.create(author=author, text=text, group=group)
+
+            # author = request.user
+            # text = form.cleaned_data['text']
+            # group = form.cleaned_data['group']
+            # Post.objects.create(author=author, text=text, group=group)
+
+            post = form.save(commit=False)
+            # Here we can modify the post
+            post.author = request.user
+            post.save()
 
             return redirect('index')
 
