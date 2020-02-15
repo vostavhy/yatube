@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post, Group
 from .forms import PostForm
@@ -6,9 +7,13 @@ from django.contrib.auth.decorators import login_required
 
 def index(request):
     # получаем результат из нашей БД
-    related = Post.objects.select_related('author').order_by('-pub_date')[:10]
+    related_posts = Post.objects.select_related('author').order_by('-pub_date').all()
+    paginator = Paginator(related_posts, 10)  # показывать по 10 записей на странице
 
-    return render(request, 'index.html', {'posts': related})
+    page_number = request.GET('page')  # переменная в url с номером запрошеной страницы
+    page = paginator.get_page(page_number)  # получить записи с нужным смещением
+
+    return render(request, 'index.html', {'page': page, 'paginator': paginator})
 
 
 # view-функция для страницы сообщества

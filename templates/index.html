@@ -2,12 +2,14 @@
 {% block title %} Последние обновления {% endblock %}
 {% block content %}
 
-    {% for post in posts %}
+    {% for post in page %}
     <h3>
         Автор: {{ post.author.username }}, Дата публикации: {{ post.pub_date|date:"d M Y" }}
     </h3>
     <p>{{ post.text|linebreaksbr }}</p>
     <hr>
     {% endfor %}
+
+    {% if %}
 
 {% endblock %}
