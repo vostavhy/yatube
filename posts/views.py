@@ -59,3 +59,15 @@ def new_post(request):
 
     form = PostForm()
     return render(request, 'new_post.html', {'form': form})
+
+
+def profile(request, username):
+    return render(request, 'profile.html', {})
+
+
+def post_view(request, username, post_id):
+    return render(request, 'post.html', {})
+
+
+def post_edit(request, user_name, post_id):
+    return render(request, 'new_post.html', {})
