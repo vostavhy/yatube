@@ -1,13 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Новая запись{% endblock %}
+
+{# загружаем simpe_tags #}
+{% load define_variables %}
+
+
+{% block title %}
+    {% if request.path == '/new/' %} Новое сообщение {% else %} Изменить сообщение {% endif %}
+{% endblock title%}
+
 {% block content %}
 {# загружаем фильтр #}
 {% load user_filters %}
 
+{# create flexible parametres #}
+{% if request.path == '/new/' %}
+    {% define 'Новое сообщение' as title %}
+    {% url 'new_post' as form_action_url %}
+    {% define 'Создать новое сообщение' as button_text %}
+{% else %}
+    {% define "Изменить сообщение" as title %}
+    {% url 'edit_post' as form_action_url %}
+    {% define 'Изменить сообщение' as button_text %}
+{% endif %}
+
 <div class="row justify-content-center">
     <div class="col-md-12 p-5">
         <div class="card">
-            <div class="card-header">Новая запись</div>
+            <div class="card-header">{{ title }}</div>
             <div class="card-body">
 
                 {% if form.errors %}
@@ -18,7 +37,7 @@
                     {% endfor %}
                 {% endif %}
 
-                <form method="post" action="{% url 'new_post' %}">
+                <form method="post" action="{{ form_action_url }}">
                     {% csrf_token %}
 
                     {% for field in form %}
@@ -38,7 +57,7 @@
 
                     <div class="col-md-6 offset-md-4">
                             <button type="submit" class="btn btn-primary">
-                                Создать новое сообщение
+                                {{ button_text }}
                             </button>
                     </div>
                 </form>
@@ -48,3 +67,4 @@
 </div> <!-- row -->
 
 {% endblock %}
+

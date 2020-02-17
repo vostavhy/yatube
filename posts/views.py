@@ -1,6 +1,9 @@
-from django.core.paginator import Paginator
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse_lazy
+
+from working_scripts.working_scripts import get_pagination_info
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Group
+from .models import Post, Group, User
 from .forms import PostForm
 from django.contrib.auth.decorators import login_required
 
@@ -8,10 +11,7 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     # получаем результат из нашей БД
     related_posts = Post.objects.select_related('author').order_by('-pub_date').all()
-    paginator = Paginator(related_posts, 10)  # показывать по 10 записей на странице
-
-    page_number = request.GET.get('page')  # переменная в url с номером запрошеной страницы
-    page = paginator.get_page(page_number)  # получить записи с нужным смещением
+    page, paginator = get_pagination_info(request, posts=related_posts)
 
     return render(request, 'index.html', {'page': page, 'paginator': paginator})
 
@@ -62,12 +62,33 @@ def new_post(request):
 
 
 def profile(request, username):
-    return render(request, 'profile.html', {})
+    user = get_object_or_404(User, username=username)
+    posts = Post.objects.filter(author=user).order_by("-pub_date")
+    page, paginator = get_pagination_info(request=request, posts=posts)
+
+    return render(request, 'profile.html', {'page': page, 'paginator': paginator})
 
 
 def post_view(request, username, post_id):
-    return render(request, 'post.html', {})
+    post = get_object_or_404(Post, author__username=username, id=post_id)
+    return render(request, 'post.html', {'post': post})
 
 
-def post_edit(request, user_name, post_id):
-    return render(request, 'new_post.html', {})
+@login_required
+def post_edit(request, username, post_id):
+    if username == request.user.username:
+        post = Post.objects.get(author__username=username, id=post_id)
+        if request.method == 'POST':
+            form = PostForm(request.POST)
+            if form.is_valid():
+                post.group = form.cleaned_data['group']
+                post.text = form.cleaned_data['text']
+                post.save()
+                return HttpResponseRedirect(reverse_lazy('post', kwargs={'username': username, 'post_id': post_id}))
+
+            return render(request, 'new_post.html', {'form': form})
+
+        # write appropriate information into the form fields
+        form = PostForm({'group': post.group, 'text': post.text})
+        return render(request, 'new_post.html', {'form': form})
+    return HttpResponse(f'Вам необходимо авторизоваться под {username}')
