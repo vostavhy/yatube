@@ -71,7 +71,8 @@ def profile(request, username):
 
 def post_view(request, username, post_id):
     post = get_object_or_404(Post, author__username=username, id=post_id)
-    return render(request, 'post.html', {'post': post})
+    count = Post.objects.filter(author__username=username).count()
+    return render(request, 'post.html', {'post': post, 'count': count})
 
 
 @login_required

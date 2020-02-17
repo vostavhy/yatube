@@ -12,7 +12,7 @@
 {# загружаем фильтр #}
 {% load user_filters %}
 
-{# create flexible parametres #}
+{# create flexible parameters #}
 {% if request.path == '/new/' %}
     {% define 'Новое сообщение' as title %}
     {% url 'new_post' as form_action_url %}
