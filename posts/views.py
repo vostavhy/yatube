@@ -55,7 +55,7 @@ def new_post(request):
         # заодно автоматически заполним прошедшими валидацию данными все поля,
         # чтобы не заставлять пользователя второй раз заполнять их
 
-        return render(request, 'index.html', {'form': form})
+        return render(request, 'new_post.html', {'form': form})
 
     form = PostForm()
     return render(request, 'new_post.html', {'form': form})
