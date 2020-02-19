@@ -61,20 +61,6 @@ def new_post(request):
     return render(request, 'new_post.html', {'form': form})
 
 
-def profile(request, username):
-    user = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=user).order_by("-pub_date")
-    page, paginator = get_pagination_info(request=request, posts=posts)
-
-    return render(request, 'profile.html', {'page': page, 'paginator': paginator})
-
-
-def post_view(request, username, post_id):
-    post = get_object_or_404(Post, author__username=username, id=post_id)
-    count = Post.objects.filter(author__username=username).count()
-    return render(request, 'post.html', {'post': post, 'count': count})
-
-
 @login_required
 def post_edit(request, username, post_id):
     if username == request.user.username:
@@ -93,3 +79,17 @@ def post_edit(request, username, post_id):
         form = PostForm({'group': post.group, 'text': post.text})
         return render(request, 'new_post.html', {'form': form})
     return HttpResponse(f'Вам необходимо авторизоваться под {username}')
+
+
+def post_view(request, username, post_id):
+    post = get_object_or_404(Post, author__username=username, id=post_id)
+    count = Post.objects.filter(author__username=username).count()
+    return render(request, 'post.html', {'post': post, 'count': count})
+
+
+def profile(request, username):
+    user = get_object_or_404(User, username=username)
+    posts = Post.objects.filter(author=user).order_by("-pub_date")
+    page, paginator = get_pagination_info(request=request, posts=posts)
+
+    return render(request, 'profile.html', {'page': page, 'paginator': paginator})
