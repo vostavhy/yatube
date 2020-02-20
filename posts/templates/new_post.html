@@ -1,17 +1,16 @@
 {% extends "base.html" %}
 
-{# загружаем simpe_tags #}
-{% load define_variables %}
-
-
 {% block title %}
     {% if request.path == '/new/' %} Новое сообщение {% else %} Изменить сообщение {% endif %}
 {% endblock title%}
 
 {% block content %}
+
 {# загружаем фильтр #}
 {% load user_filters %}
 
+{# загружаем simpe_tags #}
+{% load define_variables %}
 {# create flexible parameters #}
 {% if request.path == '/new/' %}
     {% define 'Новое сообщение' as title %}

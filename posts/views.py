@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 
-from working_scripts.working_scripts import get_pagination_info
+from working_scripts.rendering_scripts import get_pagination_info
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post, Group, User
 from .forms import PostForm
