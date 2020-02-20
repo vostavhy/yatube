@@ -78,7 +78,7 @@ def post_edit(request, username, post_id):
         # write appropriate information into the form fields
         form = PostForm({'group': post.group, 'text': post.text})
         return render(request, 'new_post.html', {'form': form})
-    return HttpResponse(f'Вам необходимо авторизоваться под {username}')
+    return HttpResponseRedirect(reverse_lazy('post', kwargs={'username': username, 'post_id': post_id}))
 
 
 def post_view(request, username, post_id):
