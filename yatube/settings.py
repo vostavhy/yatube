@@ -37,7 +37,7 @@ ALLOWED_HOSTS = [
 
 INSTALLED_APPS = [
     'users',
-    'posts',
+    'posts.apps.PostsConfig',
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.admin',
