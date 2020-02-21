@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if request.path == '/new/' %} Новое сообщение {% else %} Изменить сообщение {% endif %}
+{% endblock title%}
+
+{% block content %}
+
+{# загружаем фильтр #}
+{% load user_filters %}
+
+{# загружаем simpe_tags #}
+{% load define_variables %}
+{# create flexible parameters #}
+{% if request.path == '/new/' %}
+    {% define 'Новое сообщение' as title %}
+    {% url 'new_post' as form_action_url %}
+    {% define 'Создать новое сообщение' as button_text %}
+{% else %}
+    {% define "Изменить сообщение" as title %}
+    {% url 'edit_post' as form_action_url %}
+    {% define 'Изменить сообщение' as button_text %}
+{% endif %}
+
+<div class="row justify-content-center">
+    <div class="col-md-12 p-5">
+        <div class="card">
+            <div class="card-header">{{ title }}</div>
+            <div class="card-body">
+
+                {% if form.errors %}
+                    {% for error in form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error|escape }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" action="{{ form_action_url }}">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                        <div class="form-group row" aria-required={% if field.field.required %}"true"{% else %}"false"{% endif %}>
+                                <label for="{{ field.id_for_label }}" class="col-md-2 col-form-label text-md-right">{{ field.label }}{% if field.field.required %}<span class="required">*</span>{% endif %}</label>
+                                <div class="col-md-8">
+
+                                    {# подключаем фильтр и указываем класс #}
+                                    {{ field|addclass:"form-control" }}
+
+                                    {% if field.help_text %}
+                                    <small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ field.help_text|safe }}</small>
+                                    {% endif %}
+                                </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="col-md-6 offset-md-4">
+                            <button type="submit" class="btn btn-primary">
+                                {{ button_text }}
+                            </button>
+                    </div>
+                </form>
+            </div> <!-- card body -->
+        </div> <!-- card -->
+    </div> <!-- col -->
+</div> <!-- row -->
+
+{% endblock %}
+
