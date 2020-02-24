@@ -24,8 +24,9 @@ def group_posts(request, slug):
 
     # Метод .filter позволяет ограничить поиск по критериям. Это аналог добавления
     # условия WHERE group_id = {group_id}
-    posts = Post.objects.select_related('author').filter(group=group).order_by("-pub_date")[:12]
-    return render(request, "group.html", {"group": group, "posts": posts})
+    related_posts = Post.objects.select_related('author').filter(group=group).order_by("-pub_date").all()
+    page, paginator = get_pagination_info(request, posts=related_posts)
+    return render(request, "group.html", {"group": group, "page": page, "paginator": paginator})
 
 
 @login_required
@@ -77,19 +78,20 @@ def post_edit(request, username, post_id):
 
         # write appropriate information into the form fields
         form = PostForm({'group': post.group, 'text': post.text})
-        return render(request, 'new_post.html', {'form': form})
+        return render(request, 'new_post.html', {'form': form, 'post': post})
     return HttpResponseRedirect(reverse_lazy('post', kwargs={'username': username, 'post_id': post_id}))
 
 
 def post_view(request, username, post_id):
     post = get_object_or_404(Post, author__username=username, id=post_id)
+    author = post.author
     count = Post.objects.filter(author__username=username).count()
-    return render(request, 'post.html', {'post': post, 'count': count})
+    return render(request, 'post.html', {'post': post, 'count': count, 'author': author})
 
 
 def profile(request, username):
-    user = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=user).order_by("-pub_date")
+    author = get_object_or_404(User, username=username)
+    posts = Post.objects.filter(author=author).order_by("-pub_date").all()
     page, paginator = get_pagination_info(request=request, posts=posts)
 
-    return render(request, 'profile.html', {'page': page, 'paginator': paginator})
+    return render(request, 'profile.html', {'page': page, 'paginator': paginator, 'author': author})

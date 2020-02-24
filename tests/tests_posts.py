@@ -12,7 +12,8 @@ class TestingPostsManipulations(TestCase):
         self.user = User.objects.create_user(username='nick', password='12345')
 
         # Создаем пост
-        Post.objects.create(text='Тестовый пост 1', author=self.user)
+        self.text_post1 = 'Тестовый пост 1'
+        Post.objects.create(text=self.text_post1, author=self.user)
 
         # Создаем web клиент
         self.client = Client()
@@ -40,13 +41,16 @@ class TestingPostsManipulations(TestCase):
             self.assertEqual(len(resp.context['page']), 1)
 
             # проверяем, что текст записи совпадает
-            self.assertEquals(resp.context['page'][0].text, 'Тестовый пост 1')
+            self.assertEquals(resp.context['page'][0].text, self.text_post1)
 
             # проверяем, что автор записи совпадает
             self.assertEquals(resp.context['page'][0].author.username, self.user.username)
 
             # проверяем, что дата публикации совпадает
             self.assertEquals(resp.context['page'][0].pub_date, Post.objects.get(id=1).pub_date)
+
+            # проверяем что страница содержит нужную информацию
+            self.assertContains(resp, self.text_post1)
 
     def test_post(self):
         # формируем запрос к странице поста
@@ -56,7 +60,7 @@ class TestingPostsManipulations(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         # проверяем, что текст записи совпадает
-        self.assertEquals(resp.context['post'].text, 'Тестовый пост 1')
+        self.assertEquals(resp.context['post'].text, self.text_post1)
 
         # проверяем, что автор записи совпадает
         self.assertEquals(resp.context['post'].author.username, self.user.username)
@@ -78,7 +82,7 @@ class TestingPostsManipulations(TestCase):
     def test_cannot_edit_without_authorization(self):
         resp = self.client.get(reverse('post_edit', kwargs={'username': self.user.username, 'post_id': 1}))
         self.assertEqual(resp.status_code, 302)
-        self.assertRedirects(resp, f'/auth/login/?next=/{self.user.username}/1/edit')
+        self.assertRedirects(resp, f'/auth/login/?next=/{self.user.username}/1/edit/')
 
     def test_author_can_edit_their_posts(self):
         self.client.login(username='nick', password='12345')
@@ -91,21 +95,24 @@ class TestingPostsManipulations(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         # проверяем что пользователь может изменить свой пост
+        new_text = 'Это измененный текст'
         resp = self.client.post(reverse('post_edit',
-                                        kwargs={'username': self.user.username, 'post_id': 1}),
-                                {'text': 'Это измененный текст'})
+                                        kwargs={'username': self.user.username, 'post_id': 1}), {'text': new_text})
 
         self.assertRedirects(resp, reverse('post', kwargs={'username': self.user.username, 'post_id': 1}))
 
         # проверяем что запись изменилась на главной, в профиле и на странице поста
         resp = self.client.get(reverse('index'))
-        self.assertEquals(resp.context['page'][0].text, 'Это измененный текст')
+        self.assertEquals(resp.context['page'][0].text, new_text)
+        self.assertContains(resp, new_text)
 
         resp = self.client.get('/nick/')
-        self.assertEquals(resp.context['page'][0].text, 'Это измененный текст')
+        self.assertEquals(resp.context['page'][0].text, new_text)
+        self.assertContains(resp, new_text)
 
         resp = self.client.get(reverse('post', kwargs={'username': self.user.username, 'post_id': 1}))
-        self.assertEquals(resp.context['post'].text, 'Это измененный текст')
+        self.assertEquals(resp.context['post'].text, new_text)
+        self.assertContains(resp, new_text)
 
     def test_redirect_from_new_if_not_logged_in(self):
         resp = self.client.get(reverse('new_post'))
@@ -124,19 +131,29 @@ class TestingPostsManipulations(TestCase):
         self.client.login(username='nick', password='12345')
 
         # проверяем что пользователь может создать новый пост
-        resp = self.client.post(reverse('new_post'), {'author': self.user, 'text': 'Тестовый текст2'})
+        text_post2 = 'Тестовый текст2'
+        resp = self.client.post(reverse('new_post'), {'author': self.user, 'text': text_post2})
         self.assertRedirects(resp, reverse('index'))
 
         # формируем запрос к странице поста
-        resp = self.client.get(reverse('post', kwargs={'username': self.user.username, 'post_id': 1}))
+        resp = self.client.get(reverse('post', kwargs={'username': self.user.username, 'post_id': 2}))
 
         # проверяем что страница найдена
         self.assertEqual(resp.status_code, 200)
+
+        # проверяем что страница содержит нужную информацию
+        self.assertContains(resp, text_post2)
 
         # проверяем что количество постов на главной увеличилось
         resp = self.client.get(reverse('index'))
         self.assertEqual(len(resp.context['page']), 2)
 
+        # проверяем что страница содержит нужную информацию
+        self.assertContains(resp, text_post2)
+
         # проверяем что количество постов на странице автора увеличилось
         resp = self.client.get('/nick/')
         self.assertEqual(len(resp.context['page']), 2)
+
+        # проверяем что страница содержит нужную информацию
+        self.assertContains(resp, text_post2)

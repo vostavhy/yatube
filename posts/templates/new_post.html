@@ -18,7 +18,7 @@
     {% define 'Создать новое сообщение' as button_text %}
 {% else %}
     {% define "Изменить сообщение" as title %}
-    {% url 'edit_post' as form_action_url %}
+    {% url 'edit_post' post.author post.id as form_action_url %}
     {% define 'Изменить сообщение' as button_text %}
 {% endif %}
 
