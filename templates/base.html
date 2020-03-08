@@ -22,15 +22,9 @@
     <body>
 
         {% include 'nav.html' %}
-
-        <main>
-            <div class="container">
                 {% block content %}
                 <!-- Содержимое страницы -->
                 {% endblock content %}
-            </div>
-        </main>
-
         {% include 'footer.html' %}
 
     </body>

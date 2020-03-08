@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.flatpages import views
+from django.conf.urls import handler404, handler500
+from posts import views as post_views
 
 urlpatterns = [
     # раздел администратора
@@ -38,4 +40,12 @@ urlpatterns = [
     # если нужного шаблона для /auth не нашлось в файле users.urls -
     # ищем совпадения в файле "django.conrib.auth.urls"
     path('auth/', include('django.contrib.auth.urls')),
+
+    # обработка ошибок 404, 500
+    path('404', post_views.page_not_found),
+    path('500', post_views.server_error),
 ]
+
+# обработка ошибок 404, 500
+handler404 = "posts.views.page_not_found"  # noqa
+handler500 = "posts.views.server_error"  # noqa

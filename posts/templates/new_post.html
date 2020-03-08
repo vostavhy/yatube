@@ -36,7 +36,7 @@
                     {% endfor %}
                 {% endif %}
 
-                <form method="post" action="{{ form_action_url }}">
+                <form method="post" enctype="multipart/form-data" action="{{ form_action_url }}">
                     {% csrf_token %}
 
                     {% for field in form %}

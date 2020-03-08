@@ -2,6 +2,8 @@
 {% block title %} Последние обновления {% endblock %}
 {% block content %}
 
+{% load thumbnail %}
+
 <main role="main" class="container">
     <div class="row">
             <div class="col-md-3 mb-3 mt-1">
@@ -36,27 +38,10 @@
         <div class="col-md-9">
 
             <!-- Пост -->
-                <div class="card mb-3 mt-1 shadow-sm">
-                        <div class="card-body">
-                                <p class="card-text">
-                                        <!-- Ссылка на страницу автора в атрибуте href; username автора в тексте ссылки -->
-                                        <a href="/{{ author.username }}/"><strong class="d-block text-gray-dark">@{{ author.username }}</strong></a>
-                                        <!-- Текст поста -->
-                                        {{ post.text }}
-                                </p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                        <div class="btn-group ">
-                                                <!-- Ссылка на редактирование, показывается только автору записи -->
-                                                {% if request.user == author %}
-                                                    <a class="btn btn-sm text-muted" href="/{{ author.username }}/{{ post.id }}/edit" role="button">Редактировать</a>
-                                                {% endif %}
-                                        </div>
-                                        <!-- Дата публикации  -->
-                                        <small class="text-muted">{{ post.pub_date|date:"d M Y H:i:s" }}</small>
-                                </div>
-                        </div>
-                </div>
-     </div>
+                {% include 'post_item.html' %}
+            {# комментарии #}
+            {% include 'comments.html' with items=comments form=form%}
+        </div>
     </div>
 </main>
 

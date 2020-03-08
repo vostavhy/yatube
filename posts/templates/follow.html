@@ -1,23 +1,23 @@
 {% extends "base.html" %}
-{% block title %} Последние обновления {% endblock %}
+{% block title %} Избранные авторы {% endblock %}
 
 {% block content %}
 
     <main role="main" class="container">
 
-        {% include 'menu.html' with index=True %}
+        {% include 'menu.html' with follow=True %}
 
         <div class="row">
 
-                <h1> Последние обновления на сайте</h1>
+                <h1> Последние обновления избранных авторов </h1>
 
                 <!-- Вывод ленты записей -->
                 {% load cache %}
                 <!-- Кеширование списка постов на 20 секунд -->
                 {% cache 20 index_page page.number %}
-                    {% for post in page %}
-                        {% include "post_item.html" with post=post %}
-                    {% endfor %}
+                        {% for post in page %}
+                            {% include "post_item.html" with post=post %}
+                        {% endfor %}
                 {% endcache %}
 
                 <!-- Вывод паджинатора -->

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
@@ -136,12 +137,16 @@ STATIC_URL = "/static/"
 # задаём адрес директории, куда командой *collectstatic* будет собрана вся статика
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
+# путь к дирректории для загрузки изображений
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "posts/media")
+
 # Login
 LOGIN_URL = "/auth/login/"
 LOGIN_REDIRECT_URL = "index"
 # LOGOUT_REDIRECT_URL = "index"
 
-# подключаем движок для сохранения электронных писем
+# подключаем движок для сохранения электронных писем в виде файлов
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 # дирректория, куда будут складываться файлы писем
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
@@ -149,3 +154,18 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 # Идентификатор текущего сайта
 SITE_ID = 1
 
+# Logging
+if DEBUG is False:
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {"console": {"level": "DEBUG", "class": "logging.StreamHandler"}},
+        "loggers": {"django.db.backends": {"handlers": ["console"], "level": "DEBUG"}},
+    }
+
+# Кеширование
+CACHES = {
+        'default': {
+                'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+}
