@@ -23,13 +23,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '&*eziv-@m%+)!ptxv4&2%b_&s9b)#9h4k9wfze=fn-@z65%(cz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
         "localhost",
         "127.0.0.1",
         "[::1]",
         "testserver",
+	"84.201.162.40",
+	"yatube.xyz",
+	"www.yatube.xyz"
 ]
 
 
@@ -139,7 +142,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # путь к дирректории для загрузки изображений
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "posts/media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Login
 LOGIN_URL = "/auth/login/"
