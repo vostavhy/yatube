@@ -15,14 +15,18 @@ import environ
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-sentry_sdk.init(
-    dsn="https://1f26348e55f94525b37aab8ad7aab093@o424955.ingest.sentry.io/5357484",
-    integrations=[DjangoIntegration()],
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
 
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    # send_default_pii=True
-)
+if DEBUG is True:
+    sentry_sdk.init(
+        dsn="https://1f26348e55f94525b37aab8ad7aab093@o424955.ingest.sentry.io/5357484",
+        integrations=[DjangoIntegration()],
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        # send_default_pii=True
+    )
 
 env = environ.Env()
 environ.Env.read_env()  # импортируем
@@ -36,9 +40,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
 ALLOWED_HOSTS = [
         "localhost",
