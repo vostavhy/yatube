@@ -18,7 +18,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-if DEBUG is True:
+if DEBUG is False:
     sentry_sdk.init(
         dsn="https://1f26348e55f94525b37aab8ad7aab093@o424955.ingest.sentry.io/5357484",
         integrations=[DjangoIntegration()],
