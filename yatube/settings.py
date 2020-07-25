@@ -57,8 +57,6 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'users',
-    'posts',
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.admin',
@@ -68,11 +66,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sorl.thumbnail',
+    'users',
+    'posts',
+    'api',
+    'rest_framework',
+    'django_filters',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -173,7 +178,7 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 SITE_ID = 1
 
 # Logging
-if DEBUG is False:
+if DEBUG is True:
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
@@ -187,3 +192,18 @@ CACHES = {
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         }
 }
+
+# API
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/api/.*$'
+
+REST_FRAMEWORK = {
+        'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+        'PAGE_SIZE': 10,
+        'DEFAULT_PERMISSION_CLASSES': [
+            'rest_framework.permissions.IsAuthenticated',
+        ],
+        'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ],
+    }

@@ -29,14 +29,14 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='commentator')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')  # кто подписывается
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')  # кто подписывается
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')  # на кого подписываются
 
     def __str__(self):

@@ -31,6 +31,9 @@ urlpatterns = [
     path('about-author/', views.flatpage, {'url': '/about-author/'}, name='about-author'),
     path('about-spec/', views.flatpage, {'url': '/about-spec/'}, name='about-spec'),
 
+    # api
+    path('api/', include('api.urls')),
+
     # обработчик главной страницы ищем в urls.py приложения posts
     path('', include('posts.urls')),
 

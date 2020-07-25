@@ -15,7 +15,7 @@ def index(request):
     related_posts = Post.objects.select_related('author', 'group') \
         .order_by('-pub_date') \
         .all() \
-        .annotate(comment_count=Count('comment'))
+        .annotate(comment_count=Count('comments'))
     page, paginator = get_pagination_info(request, posts=related_posts)
 
     # проверяем, подписан ли на кого-то пользователь
@@ -39,7 +39,7 @@ def group_posts(request, slug):
         .filter(group=group) \
         .order_by("-pub_date") \
         .all() \
-        .annotate(comment_count=Count('comment'))
+        .annotate(comment_count=Count('comments'))
     page, paginator = get_pagination_info(request, posts=related_posts)
     return render(request, "group.html", {"group": group, "page": page, "paginator": paginator})
 
@@ -116,7 +116,7 @@ def profile(request, username):
     posts = Post.objects.select_related('author', 'group')\
         .filter(author=author)\
         .order_by("-pub_date")\
-        .all().annotate(comment_count=Count('comment'))
+        .all().annotate(comment_count=Count('comments'))
     page, paginator = get_pagination_info(request=request, posts=posts)
 
     following = True
@@ -170,7 +170,7 @@ def follow_index(request):
         .filter(author__in=following_authors) \
         .order_by("-pub_date") \
         .all() \
-        .annotate(comment_count=Count('comment'))
+        .annotate(comment_count=Count('comments'))
     page, paginator = get_pagination_info(request, posts=related_posts)
     return render(request, "follow.html", {'page': page, 'paginator': paginator, 'following': True})
 
