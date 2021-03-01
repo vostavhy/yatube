@@ -28,11 +28,13 @@ if DEBUG is False:
         # send_default_pii=True
     )
 
-env = environ.Env()
-environ.Env.read_env()  # импортируем
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Create secret environment
+env = environ.Env()
+env_file = os.path.join(BASE_DIR, '.env')
+environ.Env.read_env(env_file=env_file)  # импортируем
 
 
 # Quick-start development settings - unsuitable for production
@@ -114,6 +116,7 @@ WSGI_APPLICATION = 'yatube.wsgi.application'
 
 DATABASES = {
     'default': env.db(),
+    'extra': env.db('SQLITE_URL', default='sqlite:////tmp/my-tmp-sqlite.db'),
 }
 
 
