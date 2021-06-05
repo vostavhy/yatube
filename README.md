@@ -8,3 +8,10 @@
 - Возможность комментирования постов
 - Реализовано API на базе Django REST framework
 - Проект покрыт тестами
+
+ ### Установка и запуск
+ - скачать репозиторий на локальный пк
+ - установить зависимости из requirements.txt: 
+   pip install -r requirements.txt
+ - запустить dev server:
+   python manage.py runserver    
