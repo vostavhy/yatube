@@ -1,7 +1,7 @@
 attrs==19.3.0             # via pytest
 certifi==2024.7.4        # via requests
 chardet==3.0.4            # via requests
-django==3.2.25
+django==4.2.16
 idna==3.7                 # via requests
 importlib-metadata==1.5.0  # via pluggy, pytest
 more-itertools==8.2.0     # via pytest
